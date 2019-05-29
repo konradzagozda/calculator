@@ -1,62 +1,114 @@
-let user = {};
+/// math functions
 
-user.name = 'John';
-user.surname = 'Smith';
-user.name = 'Pete';
 
-delete user.name;
+function add(a, b){
+  return a + b;
+}
 
-console.log(user);
+function subtract(a, b){
+  return a - b;
+}
 
-function isEmpty(obj) {
-  let counter = 0;
-  for (let x in obj) {
-    counter++;
+function multiply(a, b){
+  return a * b;
+}
+
+function divide(a, b){
+  return a / b;
+}
+
+function operate(a, b, operator){
+  switch(operator)
+  {
+    case '+':
+      return add(a, b);
+      break;
+    case '-':
+      return subtract(a, b);
+      break;
+    case '*':
+      return multiply(a, b);
+      break;
+    case '/':
+      return divide(a, b);
+      break;
   }
-  if (counter === 0) return true;
-  else return false;
 }
 
-console.log(isEmpty(user));
-
-
-let empty = {};
-
-console.log(isEmpty(empty));
-
-// sum object properties:
-
-let salaries = {
-  John: 100,
-  Ann: 160,
-  Pete: 130
+let display = {
+  obj: document.querySelector('#display textarea'),
+  info: document.querySelector('#info'),
+  operator1: '',
+  operand1: '',
+  operator2: '',
+  evaluated: undefined
 }
 
-function sumSalaries(obj){
-  let sum = 0;
-  for (let x in obj){
-    sum += obj[x];
-  }
-  return sum;
+/// dom related functions:
+
+function updateDisplay(){
+  display.obj.value = display.operator1 + ' ' + display.operand1 + ' ' + display.operator2;
+  display.info.innerHTML = '';
 }
 
-console.log(sumSalaries(salaries));
-
-let menu = {
-  width: 200,
-  height: 300,
-  title: "My menu"
-};
-
-console.log(menu);
-
-function multiplyNumeric(obj) {
-  for (let x in obj) {
-    if (typeof obj[x] === "number"){
-      obj[x] *= 2;
+function clickDigit(e){
+    if (display.evaluated !== undefined) return;
+    if (display.operand1 === ''){
+        display.operator1 += e.target.value;
+    } else {
+      display.operator2 += e.target.value
     }
+    updateDisplay();
+}
+
+function clickOperator(e){
+    if (display.operator1 === ''){
+      display.info.innerHTML = 'Put some numbers first.';
+      return;
+    }
+    if (display.operand1 === '') {
+      display.operand1 = e.target.value;
+    } else {
+      display.operand2 = e.target.value;
+    }
+    updateDisplay();
+}
+
+function evaluate(){
+  if (display.operator2 !== '' ){
+    if (display.evaluated === undefined){
+    display.evaluated = operate(+display.operator1, +display.operator2, display.operand1);
+    display.obj.value += '\n' + ' = ' + display.evaluated;
+  }
+  } else {
+    display.info.innerHTML = 'use atleast 2 number, and an operand';
   }
 }
 
-multiplyNumeric(menu);
-console.log(menu);
+function clear(){
+  display = {
+    obj: document.querySelector('#display textarea'),
+    info: document.querySelector('#info'),
+    operator1: '',
+    operand1: '',
+    operator2: '',
+    evaluated: undefined
+  }
+  updateDisplay();
+}
+
+
+////////// variables and eventListener /////////
+
+
+let buttons = document.querySelectorAll(`.container > button[name="digit"]`);
+buttons.forEach(element => element.addEventListener('click', clickDigit));
+
+let operators = document.querySelectorAll('.container > button[name="operator"]');
+operators.forEach(element => element.addEventListener('click', clickOperator));
+
+let equal = document.querySelector('.container > button[name="equal"]');
+equal.addEventListener('click', evaluate);
+
+let clearButton = document.querySelector('.container > button[name="clear"]');
+clearButton.addEventListener('click', clear);
