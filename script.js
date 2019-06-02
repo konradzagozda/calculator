@@ -17,7 +17,7 @@ function divide(a, b){
   if (b !== 0) {
     return a / b;
   } else {
-    display.info.innerHTML = 'can\'t divide by zero, try again';
+    display.info.innerHTML = 'zero division';
     clear();
   }
 }
@@ -74,9 +74,9 @@ function evaluate() {
         display.evaluated = undefined;
       }
     } else if (display.formula.length === 2) {
-      display.info.innerHTML = 'put one more number';
+      display.info.innerHTML = 'Use correct formula.';
     } else if (display.formula.length === 0) {
-      display.info.innerHTML = 'put a number first';
+      display.info.innerHTML = 'Numbers first.';
     } else {
       updateDisplay();
     }
@@ -116,7 +116,7 @@ function updateDisplay(){
       display.obj.value += '=' + ' ' + display.evaluated;
     }
   } else {
-    display.info.innerHTML = 'use correct formula';
+    display.info.innerHTML = 'Use correct formula.';
   }
 
 }
@@ -132,7 +132,33 @@ function clickDigit(e){
   updateDisplay();
 }
 
+function clickDot(e){
+  if(display.formula.length === 0) {
+    display.formula.push("0" + e.target.value);
+  } else if (!isNaN(+display.formula[display.formula.length - 1])) {
+    if (String(display.formula[display.formula.length - 1]).indexOf('.') === -1) {
+      display.formula[display.formula.length - 1] += '.';
+    } else {
+      display.info.innerHTML = 'Too much dots.';
+      disableDot();
+      return;
+    }
+  }
+  disableDot();
+  updateDisplay();
+}
+
+function disableDot(){
+  dot.setAttribute("disabled", true);
+}
+
+function enableDot(){
+  dot.disabled = false;
+}
+
+
 function clickOperator(e){
+  enableDot();
   if (!isNaN(+display.formula[display.formula.length-1])){
     display.formula.push(e.target.value);
   } else if (display.formula.length > 0){
@@ -144,6 +170,7 @@ function clickOperator(e){
 }
 
 function clear(){
+  enableDot();
   display = {
     obj: document.querySelector('#display textarea'),
     info: document.querySelector('#info'),
@@ -169,4 +196,6 @@ equal.addEventListener('click', evaluate);
 let clearButton = document.querySelector('.container > button[name="clear"]');
 clearButton.addEventListener('click', clear);
 
+let dot = document.querySelector('.container > button[name="dot"]');
+dot.addEventListener('click', clickDot);
 ////////
