@@ -56,7 +56,7 @@ function evaluate() {
         i += 1;
       }
       i = 0
-      if (workingArr.indexOf(undefined) > -1) {
+      if (workingArr.indexOf(undefined) > -1) { //!!!!!!! prob for historical reasons here but im not sure so i'll leave it here :))
       //  clear();
         return;
       }
@@ -68,6 +68,7 @@ function evaluate() {
         i += 1;
       }
       display.evaluated = workingArr[0];
+      display.result.innerHTML = workingArr[0];
       updateDisplay();
       if (display.evaluated !== undefined) {
         display.formula = [];
@@ -82,6 +83,7 @@ function evaluate() {
 
 let display = {
   obj: document.querySelector('#display textarea'),
+  result: document.querySelector('#result'),
   evaluated: undefined,
   formula: []
 }
@@ -106,7 +108,7 @@ function updateDisplay(){
       display.obj.value += display.formula[i] + ' ';
     }
     if (display.evaluated !== undefined) {
-      display.obj.value += '=' + ' ' + display.evaluated;
+      display.result.innerHTML = '= ' + display.evaluated;
     }
   } else {
   }
@@ -179,6 +181,7 @@ function clear(){
   display = {
     obj: document.querySelector('#display textarea'),
     evaluated: undefined,
+    result: document.querySelector('#result'),
     formula: []
   }
   updateDisplay();
