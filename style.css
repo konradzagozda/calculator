@@ -1,10 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=Indie+Flower&display=swap');
+
 * {
   box-sizing: border-box;
+  font-family: 'Indie Flower', cursive;
 }
 
 body {
   height: 100vh;
-  font-size: 25px;
+  font-size: 35px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -47,6 +50,7 @@ body > div {
   border-right: 1px solid black;
   text-align: right;
   font-size: 50px;
+  font-family: 'Indie Flower', cursive;
   padding-top: 15px;
   padding-right: 20px;
 }
