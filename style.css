@@ -70,6 +70,14 @@ button[name="clear"]{
   grid-column: 3 / span 2;
 }
 
+.container > button[name="digit"]:hover {
+  background-color: rgb(83, 77, 70);
+}
+
+.container > button:hover {
+  background-color: hsla(65, 15%, 45%, 0.8);
+}
+
 .container > button {
   background-color: rgba(181, 183, 157, 0.8);
   border: 0;

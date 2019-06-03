@@ -17,7 +17,7 @@ function divide(a, b){
   if (b !== 0) {
     return a / b;
   } else {
-    display.formula = ['zero division'];
+    display.result.innerHTML = 'zero division';
     updateDisplay();
   }
 }
@@ -44,6 +44,11 @@ function operate(a, b, operator){
 
 // arr = [12345, '+', 3456, '-', 2, '*', 323];
 function evaluate() {
+    if(display.result.innerHTML){
+      let x = display.result.innerHTML;
+      clear();
+      display.formula.push(x);
+    }
     if (display.formula.length >= 3 && display.formula.length % 2 === 1){
       let arr = display.formula
       let workingArr = [...arr];
@@ -108,7 +113,7 @@ function updateDisplay(){
       display.obj.value += display.formula[i] + ' ';
     }
     if (display.evaluated !== undefined) {
-      display.result.innerHTML = '= ' + display.evaluated;
+      display.result.innerHTML = display.evaluated;
     }
   } else {
   }
@@ -116,6 +121,9 @@ function updateDisplay(){
 }
 
 function clickDigit(e){
+  if(display.result.innerHTML === 'zero division'){
+    clear();
+  }
   if(display.evaluated) {
     clear();
   }
@@ -132,6 +140,9 @@ function clickDigit(e){
 }
 
 function clickDot(e){
+  if(display.result.innerHTML === 'zero division'){
+    clear();
+  }
   if(display.formula.length === 0) {
     display.formula.push("0" + e.target.value);
   } else if (!isNaN(+display.formula[display.formula.length - 1])) {
@@ -156,6 +167,9 @@ function enableDot(){
 
 
 function clickOperator(e){
+  if(display.result.innerHTML === 'zero division'){
+    clear();
+  }
   enableDot();
   if (display.formula.length === 1 && display.formula[display.formula.length-1] === '-'){
     clear();
@@ -184,10 +198,14 @@ function clear(){
     result: document.querySelector('#result'),
     formula: []
   }
+  display.result.innerHTML = "";
   updateDisplay();
 }
 
 function clickDEL(){
+  if(display.result.innerHTML){
+    clear();
+  }
   if (display.formula.length > 0) {
     let last = display.formula[display.formula.length - 1];
     if (last.length === 1){
