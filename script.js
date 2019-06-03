@@ -17,8 +17,8 @@ function divide(a, b){
   if (b !== 0) {
     return a / b;
   } else {
-    display.info.innerHTML = 'zero division';
-    clear();
+    display.formula = ['zero division'];
+    updateDisplay();
   }
 }
 
@@ -57,7 +57,7 @@ function evaluate() {
       }
       i = 0
       if (workingArr.indexOf(undefined) > -1) {
-        clear();
+      //  clear();
         return;
       }
       while (workingArr.indexOf('+') > -1 || workingArr.indexOf('-') > -1){
@@ -82,7 +82,6 @@ function evaluate() {
 
 let display = {
   obj: document.querySelector('#display textarea'),
-  info: document.querySelector('#info'),
   evaluated: undefined,
   formula: []
 }
@@ -98,12 +97,10 @@ function updateDisplay(){
   }
   if (display.formula.length === 1) {
     if (display.formula[0] === undefined) {
-      display.info.innerHTML = '';
       clear();
       return;
     }
     display.obj.value = display.formula[0];
-    display.info.innerHTML = '';
   } else if(display.formula.length >= 2){
     for (let i = 0; i < display.formula.length; i++){
       display.obj.value += display.formula[i] + ' ';
@@ -112,7 +109,6 @@ function updateDisplay(){
       display.obj.value += '=' + ' ' + display.evaluated;
     }
   } else {
-    display.info.innerHTML = 'Use correct formula.';
   }
 
 }
@@ -140,7 +136,6 @@ function clickDot(e){
     if (String(display.formula[display.formula.length - 1]).indexOf('.') === -1) {
       display.formula[display.formula.length - 1] += '.';
     } else {
-      display.info.innerHTML = 'Too much dots.';
       disableDot();
       return;
     }
@@ -160,6 +155,9 @@ function enableDot(){
 
 function clickOperator(e){
   enableDot();
+  if (display.formula.length === 1 && display.formula[display.formula.length-1] === '-'){
+    clear();
+  }
   if (display.formula.length === 0 && display.evaluated){
     display.formula.push(display.evaluated);
     display.formula.push(e.target.value);
@@ -169,10 +167,9 @@ function clickOperator(e){
     display.formula.push(e.target.value);
   } else if (!isNaN(+display.formula[display.formula.length-1])){ // if last element is a number
     display.formula.push(e.target.value);
-  } else if (display.formula.length > 0){  // if there is no number yet, make it
+  } else if (display.formula.length > 0){
     display.formula[display.formula.length-1] = e.target.value;
   } else {
-    display.info.innerHTML = 'Put some numbers first.';
   }
   updateDisplay();
 }
@@ -181,13 +178,27 @@ function clear(){
   enableDot();
   display = {
     obj: document.querySelector('#display textarea'),
-    info: document.querySelector('#info'),
     evaluated: undefined,
     formula: []
   }
   updateDisplay();
 }
 
+function clickDEL(){
+  if (display.formula.length > 0) {
+    let last = display.formula[display.formula.length - 1];
+    if (last.length === 1){
+      display.formula.pop();
+      updateDisplay();
+      return;
+    } else {
+      last = display.formula.pop();
+      last = last.slice(0, last.length -1);
+      display.formula.push(last);
+      updateDisplay();
+    }
+  }
+}
 
 ////////// variables and eventListener /////////
 
@@ -204,6 +215,10 @@ equal.addEventListener('click', evaluate);
 let clearButton = document.querySelector('.container > button[name="clear"]');
 clearButton.addEventListener('click', clear);
 
-let dot = document.querySelector('.container > button[name="dot"]');
+let dot = document.querySelector('button[name="dot"]');
 dot.addEventListener('click', clickDot);
+
+let del = document.querySelector('.container > button[name="DEL"]');
+del.addEventListener('click', clickDEL); // to do
+
 ////////
