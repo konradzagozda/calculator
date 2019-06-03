@@ -44,7 +44,7 @@ function operate(a, b, operator){
 
 // arr = [12345, '+', 3456, '-', 2, '*', 323];
 function evaluate() {
-    if (display.formula.length >= 3){
+    if (display.formula.length >= 3 && display.formula.length % 2 === 1){
       let arr = display.formula
       let workingArr = [...arr];
       let i = 0;
@@ -70,13 +70,9 @@ function evaluate() {
       display.evaluated = workingArr[0];
       updateDisplay();
       if (display.evaluated !== undefined) {
-        display.formula = [display.evaluated];
-        display.evaluated = undefined;
+        display.formula = [];
       }
-    } else if (display.formula.length === 2) {
-      display.info.innerHTML = 'Use correct formula.';
-    } else if (display.formula.length === 0) {
-      display.info.innerHTML = 'Numbers first.';
+    } else if (display.formula.length === 2 || display.formula.length === 0) {
     } else {
       updateDisplay();
     }
@@ -122,11 +118,16 @@ function updateDisplay(){
 }
 
 function clickDigit(e){
+  if(display.evaluated) {
+    clear();
+  }
   if(display.formula.length === 0) {
     display.formula.push(e.target.value);
-  } else if (!isNaN(+display.formula[display.formula.length-1])) {
+  } else if (!isNaN(+display.formula[display.formula.length-1])) { // if last element is a number
     display.formula[display.formula.length-1] += e.target.value;
-  } else {
+  } else if (display.formula.length === 1 && display.formula[display.formula.length-1]==='-') {
+    display.formula[display.formula.length-1] += e.target.value;
+  } else{
     display.formula.push(e.target.value);
   }
   updateDisplay();
@@ -159,9 +160,16 @@ function enableDot(){
 
 function clickOperator(e){
   enableDot();
-  if (!isNaN(+display.formula[display.formula.length-1])){
+  if (display.formula.length === 0 && display.evaluated){
+    display.formula.push(display.evaluated);
     display.formula.push(e.target.value);
-  } else if (display.formula.length > 0){
+    display.evaluated = undefined;
+  }
+  if (display.formula.length === 0 && e.target.value === '-'){ // minus should negate numbers too.
+    display.formula.push(e.target.value);
+  } else if (!isNaN(+display.formula[display.formula.length-1])){ // if last element is a number
+    display.formula.push(e.target.value);
+  } else if (display.formula.length > 0){  // if there is no number yet, make it
     display.formula[display.formula.length-1] = e.target.value;
   } else {
     display.info.innerHTML = 'Put some numbers first.';
