@@ -170,6 +170,7 @@ function clickOperator(e){
   if(display.result.innerHTML === 'zero division'){
     clear();
   }
+  if(display.result.innerHTML) display.result.innerHTML = "";
   enableDot();
   if (display.formula.length === 1 && display.formula[display.formula.length-1] === '-'){
     clear();
