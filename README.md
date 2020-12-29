@@ -1,1 +1,1 @@
-this is simple in-browser calculator
+Simple in-browser calculator
